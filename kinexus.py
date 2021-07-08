@@ -150,6 +150,7 @@ def kinase_array_to_df(kinase_array):
     # rename columns to something useful
     # TODO maybe move to constants section or let user choose
     df.columns = ["kinase_no", "kinase_name", "uniprot_id", "kinexus_score", "kinexus_score_v2"]
+    df['kinase_no'] = df['kinase_no'] + 1
     # insert the site position and amino acid at the beginning of data frame
     df.insert(0, "site", phospho_sites[idx][1:])
     df.insert(0, "aa", phospho_sites[idx][0])
