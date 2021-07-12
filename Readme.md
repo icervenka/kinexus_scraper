@@ -3,7 +3,7 @@ Simple web scraper that downloads lists of kinases that phosphorylate specific
 protein residues based on http://www.phosphonet.ca. Takes uniprot protein id as
 an input (only human proteins are supported). Several sleep timers are available
 for customization to decrease the load on the webpage or avoid disconnect.
-This scraper can be used in conjunction with [pamgene](https://github.com/icervenka/pamgene_analysis) analysis script to download
+This scraper can be used in conjunction with [Pamgene](https://github.com/icervenka/pamgene_analysis) analysis script to download
 the needed phosphorylation data for kinase prediction.
 
 With default settings, the runtime is around 1 min for 10 phosphorylatable amino acids.

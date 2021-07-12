@@ -123,7 +123,7 @@ def get_kinases(uniprot_id, phospho_site, base_url):
     
     return string_array
 
-def kinase_array_to_df(kinase_array):
+def kinase_array_to_df(kinase_array, uniprot_id, phospho_site):
     """
     Transforms array of top kinases into pandas DataFrame. Adds phosphosite
     position.
@@ -152,8 +152,9 @@ def kinase_array_to_df(kinase_array):
     df.columns = ["kinase_no", "kinase_name", "uniprot_id", "kinexus_score", "kinexus_score_v2"]
     df['kinase_no'] = df['kinase_no'] + 1
     # insert the site position and amino acid at the beginning of data frame
-    df.insert(0, "site", phospho_sites[idx][1:])
-    df.insert(0, "aa", phospho_sites[idx][0])
+    df.insert(0, "site", phospho_site[1:])
+    df.insert(0, "aa", phospho_site[0])
+    df.insert(0, "substrate", uniprot_id)
     
     return(df)
 
@@ -177,6 +178,7 @@ def typecast_phos_df(phos_df):
     # final reorganization of phospho site dataframe
     # cast to proper types
     phos_df['site'] = phos_df['site'].astype(dtype='int32')
+    phos_df['kinase_name'] = phos_df['kinase_name'].str.replace(",", ";")
     phos_df['kinexus_score'] = phos_df['kinexus_score'].astype(dtype='int32')        
     phos_df['kinexus_score_v2'] = phos_df['kinexus_score_v2'].astype(dtype='int32')
     phos_df.reset_index(drop=True)
@@ -211,7 +213,7 @@ for uniprot_id in args.ids:
     
     for idx, site in enumerate(phospho_sites):
         kinases = get_kinases(uniprot_id, site, phosphonet_kinase_url)
-        kinases = kinase_array_to_df(kinases)
+        kinases = kinase_array_to_df(kinases, uniprot_id, site)
         
         # if first run of the loop, initialize the final df or append otherwise
         if(phospho_site_df.empty):
@@ -236,6 +238,6 @@ for uniprot_id in args.ids:
     
     # save to csv
     phospho_site_df.to_csv(args.outdir + "/" + uniprot_id + "_phos_kinexus.csv", 
-                           sep='\t', 
+                           sep=',', 
                            index=False)
     
