@@ -149,8 +149,8 @@ def kinase_array_to_df(kinase_array, uniprot_id, phospho_site):
     df.reset_index(inplace=True)
     # rename columns to something useful
     # TODO maybe move to constants section or let user choose
-    df.columns = ["kinase_no", "kinase_name", "uniprot_id", "kinexus_score", "kinexus_score_v2"]
-    df['kinase_no'] = df['kinase_no'] + 1
+    df.columns = ["kinase_rank", "kinase_name", "kinase_id", "kinexus_score", "kinexus_score_v2"]
+    df['kinase_rank'] = df['kinase_rank'] + 1
     # insert the site position and amino acid at the beginning of data frame
     df.insert(0, "site", phospho_site[1:])
     df.insert(0, "aa", phospho_site[0])
@@ -178,6 +178,8 @@ def typecast_phos_df(phos_df):
     # final reorganization of phospho site dataframe
     # cast to proper types
     phos_df['site'] = phos_df['site'].astype(dtype='int32')
+    # change comma in kinase name column to semicolon, 
+    # otherwise it interferes with csv imports 
     phos_df['kinase_name'] = phos_df['kinase_name'].str.replace(",", ";")
     phos_df['kinexus_score'] = phos_df['kinexus_score'].astype(dtype='int32')        
     phos_df['kinexus_score_v2'] = phos_df['kinexus_score_v2'].astype(dtype='int32')
